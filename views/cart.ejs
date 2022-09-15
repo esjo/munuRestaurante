@@ -1,0 +1,45 @@
+<%- include('layout/header') -%>
+    <a href="/">menu</a>
+    <%if(cart){%>
+        <%cart.forEach(function(item){%>
+            <img src="<%=item.imagen%>" alt="">
+            <p><%=item.nombre%></p>
+            <p>precio:<%=item.precio%></p>
+
+            <form action="/editar_cantidad" method="post">
+
+                <input type="hidden" name="id" value="<%=item.id%>">
+                <input type="submit" value="-" name="disminuir_cantidad">
+                <input type="number" name="cantidad" id="" value="<%=item.cantidad%>" readonly>
+                <input type="submit" value="+" name="aumentar_cantidad">
+
+            </form>
+            
+
+
+            <p>total:<%=item.precio * item.cantidad%></p>
+
+            <form action="/remove_product" method="post">
+                <input type="hidden" name="id" value="<%=item.id%>">
+                <input type="submit" value="eliminar">
+            </form>
+
+            
+        <%})%>
+        <%if(total > 0 && cart){%>
+            <p>total a pagar:<%=total%></p>
+        
+        <form action="/pedido" method="get">
+            <input type="submit" value="hacer pedido">
+        </form>
+        <%}else{%>
+            <h1>El carrito esta vacio</h1>
+        <%}%>
+    <%}%>
+   
+    
+
+    
+    
+</body>
+</html>

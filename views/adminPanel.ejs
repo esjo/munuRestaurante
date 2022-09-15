@@ -1,0 +1,38 @@
+<%- include('layout/header') -%>
+    <h1>Panel admin</h1>
+    <table border="1">
+        <caption>Pedidos</caption>
+        <tr>
+            <th>Producto</th>
+            <th>cantidad</th>
+            <th>precio</th>
+            <th></th>
+            <th>nombre del cliente</th>
+            <th>fecha del pedido</th>
+        </tr>
+        <%orden.forEach(function(pedido){%>
+        <tr>
+            <td><%=pedido.nombre%></td>
+            <td><%=pedido.cantidad%></td>
+            <td><%=pedido.precio%></td>
+            <td><img src="<%=pedido.imagen%>" alt=""></td>
+            <td><%=pedido.nombre_cliente%></td>
+            <td><%=pedido.fecha%></td>
+            <form action="/entregado" method="post">
+                <input type="hidden" name="id" value="<%=pedido.id%>">
+                <td><input type="submit" value="Entregado"></td>
+            </form>
+            
+        </tr>
+        <%})%> 
+    </table>
+
+    <a href="/nuevoProducto">Añadir nuevo producto</a>
+    <a href="/productos">Productos</a>
+
+    
+    <form action="/cerrarSesion" method="post">
+        <input type="submit" value="Cerrar sesion">
+    </form>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<%- include('layout/header') -%>
+    <a href="/cart">
+        <span id="contador" class=""></span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-shopping-cart" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#fd0061" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <circle cx="6" cy="19" r="2" />
+            <circle cx="17" cy="19" r="2" />
+            <path d="M17 17h-11v-14h-2" />
+            <path d="M6 5l14 1l-1 7h-13" />
+          </svg>
+    </a>
+    
+    <div id="menu">
+        <%producto.forEach(function(articulo){%>
+            <h2><%=articulo.nombre%></h2>
+            <h3>precio:<%=articulo.precio%></h3>
+            <img src=<%=articulo.imagen%> alt="">
+
+            <form action="/addcart" method="post">
+                <input type="hidden" name="id" value="<%=articulo.id%>">
+                <input type="hidden" name="nombre" value="<%=articulo.nombre%>">
+                <input type="hidden" name="precio" value=<%=articulo.precio%>>
+                <input type="hidden" name="imagen" value="<%=articulo.imagen%>">
+                <input type="hidden" name="cantidad" value=1>
+                <button data-plato="<%=JSON.stringify(articulo)%>" type="submit" class="boton">add</button>
+            </form>
+            
+        <%});%>
+    </div>
+
+    
+
+    <form action="/cerrarSesion" method="post">
+        <input type="submit" value="Cerrar sesion">
+    </form>
+
+    
+        <!-- <p><%=JSON.stringify(producto)%></p> -->
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+        <script src="/pedido.js" type="module"></script>
+</body>
+</html>

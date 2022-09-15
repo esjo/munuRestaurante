@@ -1,0 +1,90 @@
+<%- include('layout/header') -%>
+
+    <h1>Resumen de su pedido</h1>
+    <%cart.forEach(function(item){%>
+    <h2><%=item.nombre%></h2>
+    <img src="<%=item.imagen%>" alt="">
+    <p>cantidad:<%=item.cantidad%></p>
+    <p>total:<%=item.precio * item.cantidad%></p>
+    <%})%>
+
+    <h3>Total pedido: <%=total%></h3>
+
+    <a href="/">Añadir mas productos</a>
+    <!-- <form action="/pagos" method="get">
+        <input type="submit" value="Realizar pago">
+    </form> -->
+    <div id="paypal-button-container"></div>
+
+</body>
+</html>
+
+<!-- Replace "test" with your own sandbox Business account app client ID -->
+<script src="https://www.paypal.com/sdk/js?client-id=AVVBZWRkGhba3zmD6toffmT06rhLsFHTj31dsn37YuqxgZF7Fs-mVHebUT_XaA1O26SnlOyaOg9FttHU&currency=USD"></script>
+<!-- Set up a container element for the button -->
+
+<!-- <script>
+  paypal.Buttons({
+    
+    createOrder: (data, actions) => {
+      return actions.order.create({
+        purchase_units: [{
+          amount: {
+            value: '<%=totalPago%>' // Can also reference a variable or function
+          }
+        }]
+      });
+    },
+    
+    onApprove: (data, actions) => {
+      return actions.order.capture().then(function(orderData) {
+        
+        console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+        const transaction = orderData.purchase_units[0].payments.captures[0];
+        alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
+        
+      });
+    }
+  }).render('#paypal-button-container');
+
+ 
+</script> -->
+
+<script>
+ paypal.Buttons({
+   
+   createOrder: (data, actions) => {
+     return actions.order.create({
+       purchase_units: [{
+         amount: {
+           value: '<%=totalPago%>' // Can also reference a variable or function
+         }
+       }]
+     });
+   },
+   
+   onApprove: (data, actions) => {
+     actions.order.capture().then(function(orderData) {
+       let url = "http://localhost:4000/pagos";
+
+       location.href = "/pagoCorrecto";
+       console.log(orderData);
+       return fetch(url,{
+         method:"post",
+         headers:{
+           'content-type':'application/json'
+         },
+         body: JSON.stringify({
+           orderData
+         })
+       })
+
+      
+       /* console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+       const transaction = orderData.purchase_units[0].payments.captures[0];
+       alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`); */
+       
+     });
+   }
+ }).render('#paypal-button-container');
+</script>

@@ -6,6 +6,8 @@ import db from "./config/db.js";
 
 const app = express();
 
+
+
 db.authenticate()
     .then(() => console.log('Bases de datos conectada'))
     .catch((error) =>console.log(error));
@@ -17,11 +19,13 @@ const port = process.env.PORT || 4000;
 //Habilitando ejs
 app.set('view engine', 'ejs');
 
+
+
 //sesiones
 app.use(session({
     secret:'secret',
-    resave:true,
-    saveUninitialized:true
+    resave:false,
+    saveUninitialized:false,
 }))
 
 //agregar body parser para leer los datos del formulario
@@ -29,6 +33,13 @@ app.use(express.urlencoded({extended:true}));
 
 //definir la carpeta publica
 app.use(express.static("public"));
+app.use(express.json())
+
+
+app.use((req,res,next) =>{
+    res.locals.session = req.session
+    next()
+})
 
 app.use("/",router);    
 

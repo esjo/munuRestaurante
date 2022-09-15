@@ -1,0 +1,19 @@
+<%- include('layout/header') -%>
+    <h1>Nuevo producto</h1>
+    <form action="/nuevoProductoPost" method="post" enctype="multipart/form-data">
+        <input type="text" name="nombreProducto" id="nombreProducto">Nombre platillo
+        <input type="number" name="precio" id="precio">precio
+        <input type="file" name="imagen" id="imagen">
+        <input type="submit" value="subir">
+    </form>
+    <%if(typeof mensaje != "undefined"){%>
+        <p><%=mensaje%></p>
+    <%}%>
+
+    <%if(typeof errores != "undefined"){%>
+        <% errores.forEach(function(error){ %>
+            <p><%=error.msg%></p> 
+        <% }); %>
+    <%}%>
+</body>
+</html>

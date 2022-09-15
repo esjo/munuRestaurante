@@ -1,14 +1,14 @@
 import Sequelize from "sequelize";
 import db from "../config/db.js";
 
-export const Usuario = db.define('usuarios', {
+export const Producto = db.define('productos', {
     nombre:{
         type: Sequelize.STRING
     },
-    correo:{
-        type:Sequelize.STRING
+    precio:{
+        type:Sequelize.INTEGER
     },
-    contraseña:{
+    imagen:{
         type:Sequelize.STRING
     }
 });

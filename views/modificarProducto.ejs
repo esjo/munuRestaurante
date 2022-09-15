@@ -1,0 +1,10 @@
+<%- include('layout/header') -%>
+    <form action="/modificarProductoPost" method="post">
+        <input type="hidden" name="id" value="<%=id%>">
+        nombre<input type="text" name="nombre" id="nombre" value="<%=nombre%>">
+        precio<input type="number" name="precio" id="precio" value="<%=precio%>">
+        <input type="submit" value="actualizar">
+    </form>
+    <a href="/productos">inicio</a>
+</body>
+</html>

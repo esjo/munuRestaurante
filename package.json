@@ -10,11 +10,16 @@
   "author": "José",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.27.2",
+    "cors": "^2.8.5",
     "ejs": "^3.1.8",
     "express": "^4.18.1",
     "express-session": "^1.17.3",
+    "multer": "^1.4.5-lts.1",
     "mysql2": "^2.3.3",
-    "sequelize": "^6.21.4"
+    "sequelize": "^6.21.4",
+    "sharp": "^0.31.0",
+    "stripe": "^10.6.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.19"

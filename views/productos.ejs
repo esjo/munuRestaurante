@@ -1,0 +1,33 @@
+<%- include('layout/header') -%>
+
+    <h1>Productos</h1>
+    <table>
+    <tr>
+        <th>Producto</th>
+        <th>precio</th>
+        <th>imagen del producto</th>
+    </tr>
+    <%productos.forEach(function(articulo){%>
+        <tr>
+            <td><%=articulo.nombre%></td>
+            <td><%=articulo.precio%></td>
+            <td><img src="<%=articulo.imagen%>" alt=""></td>
+
+            <form action="/modificarProducto" method="get">
+                <input type="hidden" name="nombre" value="<%=articulo.nombre%>">
+                <input type="hidden" name="precio" value="<%=articulo.precio%>">
+                <input type="hidden" name="id" value="<%=articulo.id%>">
+                <td><input type="submit" value="modificar"></td>
+            </form>
+
+            <form action="/eliminarProducto" method="post">
+                <input type="hidden" name="id" value="<%=articulo.id%>">
+                <td><input type="submit" value="Eliminar"></td>
+            </form>
+            
+        </tr>
+    <%})%>
+    </table>
+    <a href="/admin">Inicio</a>
+</body>
+</html>
