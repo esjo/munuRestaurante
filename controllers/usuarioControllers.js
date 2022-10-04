@@ -1,4 +1,6 @@
 import {Usuario} from "../modelos/Usuario.js";
+import {generarId} from "../helpers/tokens.js";
+import {emailRegistro} from "../helpers/mails.js";
 import { Producto } from "../modelos/Productos.js";
 import { Orden } from "../modelos/Orden.js";
 import { Pagos } from "../modelos/Pagos.js";
@@ -12,9 +14,7 @@ const helperImg = (filePath, filename, size = 120) =>{
 }
 
 
-const login = (req,res) =>{
-    res.render("login");
-}
+
 
 
 function isProductIncart(cart,id){
@@ -36,6 +36,10 @@ function calcularTotal(cart,req){
     }
     req.session.total = total;
     return total; 
+}
+
+const login = (req,res) =>{
+    res.render("login");
 }
 
 const loginPost = async(req,res) =>{
@@ -73,13 +77,23 @@ const loginPost = async(req,res) =>{
             }
             if(usuarios === null){
                 errores.push({msg:"Usuario no existe"})
-                res.render("login",{
+                return res.render("login",{
                     errores
                 })
-            }else{
-                req.session.login = true;
-                res.redirect('/');
+
+            
             }
+
+            if(!usuarios.confirmado){
+                errores.push({msg:"El usuario no ha sido confirmado"})
+                return res.render('login',{
+                    errores
+                })
+            }
+            
+            req.session.login = true;
+            res.redirect('/');
+            
             //console.log(usuarios)
 
         } catch (error) {
@@ -128,13 +142,27 @@ const registratePost = async(req,res)=>{
             const usuarioNuevo = await Usuario.findOne({where:{correo:correo}});
             //console.log(usuarioNuevo)
             if(usuarioNuevo === null){
-                await Usuario.create({
+                const usuarioCreado = await Usuario.create({
                     nombre,
                     correo,
-                    contraseña
+                    contraseña,
+                    token:generarId()
                 });
+
+                //Enviar email de confirmación
+
+                emailRegistro({
+                    nombre:usuarioCreado.nombre,
+                    email:usuarioCreado.correo,
+                    token:usuarioCreado.token
+                })
     
-                res.redirect('/login')
+                //Mostrar mensaje de confirmación
+                res.render('template/mensaje',{
+                    pagina: 'Cuenta creada correctamente',
+                    mensaje: 'Hemos enviado un email de confirmación, presiona en el enlace'
+                })
+                /* res.redirect('/login') */
             }else{
                 errores.push({msg:"Usuario ya existe"})
                 res.render('registrate',{
@@ -146,6 +174,35 @@ const registratePost = async(req,res)=>{
         }
     }
     
+}
+
+//función que comprueba una cuenta
+const confirmar = async(req,res) =>{
+    const {token} = req.params;
+
+    //verificar si el token es valido
+
+    const usuario = await Usuario.findOne({where:{token}});
+
+    if(!usuario){
+        return res.render('confirmar-usuario',{
+            pagina:'Error al confirmar tu cuenta',
+            mensaje: 'Hubo un error al confirmar tu cuenta, intenta de nuevo',
+            error:true
+        })
+    }
+
+    //confirmar la cuenta
+    usuario.token = null;
+    usuario.confirmado = true;
+
+    await usuario.save();
+
+    return res.render('confirmar-usuario',{
+        pagina:'Cuenta confirmada',
+        mensaje: 'La cuenta se confirmo',
+        error:false
+    })
 }
 
 const menu = async(req,res) =>{
@@ -320,26 +377,7 @@ const pedido = async(req,res) =>{
     });
 }
 
-/* const pagos = async(req,res) =>{
-    const correo = req.session.correo;
-    const total = req.session.total;
-    let totalPago =  total/4500;
-    totalPago = totalPago.toFixed(2);
-    console.log(req.body)
-    
-    console.log("Antes de eleminar la sesion",req.session);
-    console.log(req.session.cart);
-    
 
-    req.session.cart 
-    req.session.total 
-
-    console.log("DESPUES de eleminar la sesion",req.session);
-    res.render("pagos",{
-        total,
-        totalPago
-    })
-} */
 
 const pagopaypal = async(req,res) => {
     const {status} = req.body.orderData;
@@ -529,6 +567,7 @@ export {
     login,
     loginPost,
     registratePost,
+    confirmar,
     menu,
     menupost,
     cart,

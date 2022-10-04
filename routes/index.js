@@ -1,5 +1,5 @@
 import express from "express";
-import { admin, cart, cerrarSesion, editarCantidad, entregado, login, loginPost, menu,menupost,nuevoProducto,nuevoProductoPost,pedido,registrate, registratePost,removeProduct,productos, eliminarProducto, modificarProducto, modificarProductoPost,pagopaypal,pagoCorrecto } from "../controllers/usuarioControllers.js";
+import { admin, cart,confirmar, cerrarSesion, editarCantidad, entregado, login, loginPost, menu,menupost,nuevoProducto,nuevoProductoPost,pedido,registrate, registratePost,removeProduct,productos, eliminarProducto, modificarProducto, modificarProductoPost,pagopaypal,pagoCorrecto } from "../controllers/usuarioControllers.js";
 import multer from "multer";
 
 
@@ -29,6 +29,7 @@ router.post("/login", loginPost)
 
 router.get("/registrate", registrate)
 router.post("/registrate", registratePost)
+router.get("/confirmar/:token", confirmar)
 router.post("/cerrarSesion",cerrarSesion)
 
 router.get("/", menu)

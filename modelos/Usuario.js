@@ -10,5 +10,7 @@ export const Usuario = db.define('usuarios', {
     },
     contraseña:{
         type:Sequelize.STRING
-    }
+    },
+    token:{type:Sequelize.STRING},
+    confirmado:{type:Sequelize.BOOLEAN}
 });
